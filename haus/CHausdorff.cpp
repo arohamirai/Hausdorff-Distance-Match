@@ -2,18 +2,18 @@
 * Copyright (C) 2015 HolaMirai(HolaMirai@163.com)
 * All rights reserved.
 * 
-* ÎÄ¼şÃû£ºhausdorff.cpp
-* ÕªÒª£ºÑ°ÕÒHausdorff Distance¶ÈÁ¿µÄ×îÆ¥ÅäÎ»ÖÃºÍ×îÆ¥ÅäÎ»ÖÃµÄ¾àÀë
-* µ±Ç°°æ±¾£º v2.1.1,2016Äê1ÔÂ1ÈÕ£¬ĞŞÕıÁËCHausdorffÀàµÄ¹¹Ôìº¯ÊıÎ´½ÓÊÕ´øÆ¥ÅäÍ¼ÏñµÄ´íÎó
-*			ÎªHarris¡¢SIFT¡¢SURFÌØÕ÷µã·µ»ØÊ±Ìí¼Óstd::moveÓÅ»¯£¬VS2010ÏÂ¾ßÌåĞ§¹û²»Ã÷ÏÔ
-* ÀúÊ·¼ÇÂ¼£ºV2.1, 2015Äê9ÔÂ11ÈÕ£¬HolaMirai, Ìí¼Ó createTable()¡¢freeTable()º¯Êı£¬Ìí¼ÓÆ½¾ùhausdorff¾àÀë·½·¨,Ìí¼Ó×¢ÊÍ
-* ÀúÊ·¼ÇÂ¼£ºV2.0, 2015Äê9ÔÂ10ÈÕ£¬HolaMirai, µ÷ÊÔÍê³É¸ÃÎÄ¼ş&Ìí¼ÓmeanDistance()º¯Êı
-*		  £ºV1.0, 2015Äê9ÔÂ7ÈÕ£¬ HolaMirai, ´´½¨¸ÃÎÄ¼ş
+* æ–‡ä»¶åï¼šhausdorff.cpp
+* æ‘˜è¦ï¼šå¯»æ‰¾Hausdorff Distanceåº¦é‡çš„æœ€åŒ¹é…ä½ç½®å’Œæœ€åŒ¹é…ä½ç½®çš„è·ç¦»
+* å½“å‰ç‰ˆæœ¬ï¼š v2.1.1,2016å¹´1æœˆ1æ—¥ï¼Œä¿®æ­£äº†CHausdorffç±»çš„æ„é€ å‡½æ•°æœªæ¥æ”¶å¸¦åŒ¹é…å›¾åƒçš„é”™è¯¯
+*			ä¸ºHarrisã€SIFTã€SURFç‰¹å¾ç‚¹è¿”å›æ—¶æ·»åŠ std::moveä¼˜åŒ–ï¼ŒVS2010ä¸‹å…·ä½“æ•ˆæœä¸æ˜æ˜¾
+* å†å²è®°å½•ï¼šV2.1, 2015å¹´9æœˆ11æ—¥ï¼ŒHolaMirai, æ·»åŠ  createTable()ã€freeTable()å‡½æ•°ï¼Œæ·»åŠ å¹³å‡hausdorffè·ç¦»æ–¹æ³•,æ·»åŠ æ³¨é‡Š
+* å†å²è®°å½•ï¼šV2.0, 2015å¹´9æœˆ10æ—¥ï¼ŒHolaMirai, è°ƒè¯•å®Œæˆè¯¥æ–‡ä»¶&æ·»åŠ meanDistance()å‡½æ•°
+*		  ï¼šV1.0, 2015å¹´9æœˆ7æ—¥ï¼Œ HolaMirai, åˆ›å»ºè¯¥æ–‡ä»¶
 ******************************************/
 
 /*
-*              ¿É¸Ä½ø´¦
-* ¸ÄÓÃVoronoiÍ¼½øĞĞHausdorff¾àÀë¼ÆËã
+*              å¯æ”¹è¿›å¤„
+* æ”¹ç”¨Voronoiå›¾è¿›è¡ŒHausdorffè·ç¦»è®¡ç®—
 *
 */
 
@@ -21,14 +21,14 @@
 #include "highgui.h"
 
 /*
-* º¯ÊıÃû³Æ£ºCHausdorff
-* º¯Êı¹¦ÄÜ£ºÀà¹¹Ôìº¯Êı
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£º ´ıÆ¥ÅäÍ¼¡¢Ä£°å¶şÖµ»¯Í¼Ïñ£¬´ÖÆ¥Åäºá¡¢×İ×ø±êÉ¨Ãè¼ä¸ô xInterval£¬yInterval 
-*            Ç°Ïò¾àÀëÒò×Ó frontRange£¬ºóÏò¾àÀëÒò×Ó backRange
-* Êä³ö²ÎÊı£ºÎŞ
-* ·µ »Ø Öµ£º
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šCHausdorff
+* å‡½æ•°åŠŸèƒ½ï¼šç±»æ„é€ å‡½æ•°
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼š å¾…åŒ¹é…å›¾ã€æ¨¡æ¿äºŒå€¼åŒ–å›¾åƒï¼Œç²—åŒ¹é…æ¨ªã€çºµåæ ‡æ‰«æé—´éš” xIntervalï¼ŒyInterval 
+*            å‰å‘è·ç¦»å› å­ frontRangeï¼Œåå‘è·ç¦»å› å­ backRange
+* è¾“å‡ºå‚æ•°ï¼šæ— 
+* è¿” å› å€¼ï¼š
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
 CHausdorff::CHausdorff(IplImage *srcImg, IplImage *modelImge, int xInterval, int yInterval, double frontRange, double backRange)
 {
@@ -53,13 +53,13 @@ CHausdorff::~CHausdorff()
 }
 
 /*
-* º¯ÊıÃû³Æ£ºsetScanInterval_X
-* º¯Êı¹¦ÄÜ£ºÉèÖÃ´ÖÆ¥ÅäX×ø±êÉ¨Ãè¼ä¸ô
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£º ´ÖÆ¥Åäºá×ø±êÉ¨Ãè¼ä¸ô xInterval
-* Êä³ö²ÎÊı£ºÎŞ
-* ·µ »Ø Öµ£ºvoid
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šsetScanInterval_X
+* å‡½æ•°åŠŸèƒ½ï¼šè®¾ç½®ç²—åŒ¹é…Xåæ ‡æ‰«æé—´éš”
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼š ç²—åŒ¹é…æ¨ªåæ ‡æ‰«æé—´éš” xInterval
+* è¾“å‡ºå‚æ•°ï¼šæ— 
+* è¿” å› å€¼ï¼švoid
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
 void CHausdorff::setScanInterval_X(int xInterval)
 {
@@ -67,13 +67,13 @@ void CHausdorff::setScanInterval_X(int xInterval)
 }
 
 /*
-* º¯ÊıÃû³Æ£ºsetScanInterval_Y
-* º¯Êı¹¦ÄÜ£ºÉèÖÃ´ÖÆ¥ÅäY×ø±êÉ¨Ãè¼ä¸ô
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£º ´ÖÆ¥Åäºá×ø±êÉ¨Ãè¼ä¸ô yInterval
-* Êä³ö²ÎÊı£ºÎŞ
-* ·µ »Ø Öµ£ºvoid
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šsetScanInterval_Y
+* å‡½æ•°åŠŸèƒ½ï¼šè®¾ç½®ç²—åŒ¹é…Yåæ ‡æ‰«æé—´éš”
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼š ç²—åŒ¹é…æ¨ªåæ ‡æ‰«æé—´éš” yInterval
+* è¾“å‡ºå‚æ•°ï¼šæ— 
+* è¿” å› å€¼ï¼švoid
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
 void CHausdorff::setScanInterval_Y(int yInterval)
 {
@@ -81,13 +81,13 @@ void CHausdorff::setScanInterval_Y(int yInterval)
 }
 
 /*
-* º¯ÊıÃû³Æ£ºsetFrontRange
-* º¯Êı¹¦ÄÜ£ºÉèÖÃÇ°ÏòÆ¥Åä¾àÀëÒò×Ó
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£º Ç°ÏòÆ¥Åä¾àÀëÒò×Ó Range
-* Êä³ö²ÎÊı£ºÎŞ
-* ·µ »Ø Öµ£ºvoid
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šsetFrontRange
+* å‡½æ•°åŠŸèƒ½ï¼šè®¾ç½®å‰å‘åŒ¹é…è·ç¦»å› å­
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼š å‰å‘åŒ¹é…è·ç¦»å› å­ Range
+* è¾“å‡ºå‚æ•°ï¼šæ— 
+* è¿” å› å€¼ï¼švoid
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
 void CHausdorff::setFrontRange(double Range)
 {
@@ -95,13 +95,13 @@ void CHausdorff::setFrontRange(double Range)
 }
 
 /*
-* º¯ÊıÃû³Æ£ºsetFrontRange
-* º¯Êı¹¦ÄÜ£ºÉèÖÃºóÏòÆ¥Åä¾àÀëÒò×Ó
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£º Ç°ÏòÆ¥Åä¾àÀëÒò×Ó Range
-* Êä³ö²ÎÊı£ºÎŞ
-* ·µ »Ø Öµ£ºvoid
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šsetFrontRange
+* å‡½æ•°åŠŸèƒ½ï¼šè®¾ç½®åå‘åŒ¹é…è·ç¦»å› å­
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼š å‰å‘åŒ¹é…è·ç¦»å› å­ Range
+* è¾“å‡ºå‚æ•°ï¼šæ— 
+* è¿” å› å€¼ï¼švoid
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
 void CHausdorff::setBackRange(double Range)
 {
@@ -109,13 +109,13 @@ void CHausdorff::setBackRange(double Range)
 }
 
 /*
-* º¯ÊıÃû³Æ£ºsearchPoints
-* º¯Êı¹¦ÄÜ£º»ñµÃÌØÕ÷µã×ø±êºÍÌØÕ÷µãµÄ¸öÊı
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£º »Ò¶ÈÍ¼ img£¬ ½ÓÊÜÌØÕ÷µãµÄÊı×éÖ¸Õë
-* Êä³ö²ÎÊı£ºÎŞ
-* ·µ »Ø Öµ£º ÌØÕ÷µã¸öÊı
-* ÆäËüËµÃ÷£º Ö§³ÖÍ¼Æ¬ ROI
+* å‡½æ•°åç§°ï¼šsearchPoints
+* å‡½æ•°åŠŸèƒ½ï¼šè·å¾—ç‰¹å¾ç‚¹åæ ‡å’Œç‰¹å¾ç‚¹çš„ä¸ªæ•°
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼š ç°åº¦å›¾ imgï¼Œ æ¥å—ç‰¹å¾ç‚¹çš„æ•°ç»„æŒ‡é’ˆ
+* è¾“å‡ºå‚æ•°ï¼šæ— 
+* è¿” å› å€¼ï¼š ç‰¹å¾ç‚¹ä¸ªæ•°
+* å…¶å®ƒè¯´æ˜ï¼š æ”¯æŒå›¾ç‰‡ ROI
 */
 int CHausdorff::searchPoints(IplImage *img, CvPoint pPoints[])
 {
@@ -135,7 +135,7 @@ int CHausdorff::searchPoints(IplImage *img, CvPoint pPoints[])
 		rect.height = img->roi->height;
 	}
 
-	//Í³¼ÆÌØÕ÷µã
+	//ç»Ÿè®¡ç‰¹å¾ç‚¹
 	uchar *ptr;
 	int num = 0;
 	for (int i = rect.y; i < rect.y + rect.height; i++)
@@ -170,29 +170,29 @@ int CHausdorff::searchPoints(IplImage *img, CvPoint pPoints[])
 		}
 	}
 
-	//½á¹û·µ»Ø
+	//ç»“æœè¿”å›
 	return num;
 }/*searchPoints()*/
 
 
 /*
-* º¯ÊıÃû³Æ£ºmatch
-* º¯Êı¹¦ÄÜ£ºÀûÓÃ Hausdorff distance ÖµÀ´Æ¥ÅäÍ¼Æ¬
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£ºÎŞ
-* Êä³ö²ÎÊı£º×î¼ÑÆ¥ÅäÎ»ÖÃ ºÍ×î¼ÑÆ¥Åä¾àÀë
-* ·µ »Ø Öµ£º void
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šmatch
+* å‡½æ•°åŠŸèƒ½ï¼šåˆ©ç”¨ Hausdorff distance å€¼æ¥åŒ¹é…å›¾ç‰‡
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼šæ— 
+* è¾“å‡ºå‚æ•°ï¼šæœ€ä½³åŒ¹é…ä½ç½® å’Œæœ€ä½³åŒ¹é…è·ç¦»
+* è¿” å› å€¼ï¼š void
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
 void CHausdorff::match()
 {
 	int ws, hs, wm, hm, numModel, numSrc;
 	CvRect rect;
-	double *matchDis = new double[100];  //¼Ù¶¨×î´ó»áÓĞ100¸ö×î¼ÑÎ»ÖÃ£¬ÕâÀï²¢Î´ÊµÏÖ£¬Áô×ÅÒÔºó¸Ä½ø
+	double *matchDis = new double[100];  //å‡å®šæœ€å¤§ä¼šæœ‰100ä¸ªæœ€ä½³ä½ç½®ï¼Œè¿™é‡Œå¹¶æœªå®ç°ï¼Œç•™ç€ä»¥åæ”¹è¿›
 	CvPoint *matchPoints = new CvPoint[100];
 	double temp = MAX_DISTANCE;
 	double dis = MAX_DISTANCE;
-	int n = 0;  //Ö»ÓĞÒ»¸ö×î¼ÑÎ»ÖÃ£¬±¾ÎÄµÄ¼ÙÉèÇ°Ìá
+	int n = 0;  //åªæœ‰ä¸€ä¸ªæœ€ä½³ä½ç½®ï¼Œæœ¬æ–‡çš„å‡è®¾å‰æ
 
 
 	ws = m_srcImg->width;
@@ -200,11 +200,11 @@ void CHausdorff::match()
 	wm = m_modelImg->width;
 	hm = m_modelImg->height;
 
-	// ´æ´¢Ä£°åÌØÕ÷µãºÍÔ­Í¼ÏñÌØÕ÷µã
+	// å­˜å‚¨æ¨¡æ¿ç‰¹å¾ç‚¹å’ŒåŸå›¾åƒç‰¹å¾ç‚¹
 	CvPoint *pMPoints = new CvPoint[wm * hm];
 	CvPoint *pSPoints = new CvPoint[wm * hm];
 
-	//»ñµÃÄ£°åÌØÕ÷µã
+	//è·å¾—æ¨¡æ¿ç‰¹å¾ç‚¹
 	numModel = searchPoints(m_modelImg,pMPoints);
 
 	if (numModel == 0)
@@ -213,12 +213,12 @@ void CHausdorff::match()
 		return;
 	}
 
-	//ËÑË÷×î¼ÑÆ¥Åä
+	//æœç´¢æœ€ä½³åŒ¹é…
 	rect.width = wm;
 	rect.height = hm;
 	
-	// ´ÖÆ¥Åä
-	//#pragma omp parallel for firstprivate(m_srcImg)     //²¢ĞĞÔËËã
+	// ç²—åŒ¹é…
+	//#pragma omp parallel for firstprivate(m_srcImg)     //å¹¶è¡Œè¿ç®—
 	for (int i = 0; i < ws; i += m_xInterval)
 	{
 		rect.x = i;
@@ -232,7 +232,7 @@ void CHausdorff::match()
 			{
 				continue;
 			}
-			// ÌØÕ÷µãÊı¾İÁ¿Ïà²îÌ«´óÔòºöÂÔ¸ÃÎ»ÖÃ£¬¿ÉÒÔÒÀ¾ßÌåÇé¿öµ÷Õû²ÎÊı
+			// ç‰¹å¾ç‚¹æ•°æ®é‡ç›¸å·®å¤ªå¤§åˆ™å¿½ç•¥è¯¥ä½ç½®ï¼Œå¯ä»¥ä¾å…·ä½“æƒ…å†µè°ƒæ•´å‚æ•°
 			if (double(numSrc)/numModel < 0.8 || (double)numSrc/numModel > 1.25)
 			{
 				continue;
@@ -250,7 +250,7 @@ void CHausdorff::match()
 		}
 	}
 
-	//¾«Æ¥Åä
+	//ç²¾åŒ¹é…
 	for (int i = matchPoints[n].x - m_xInterval; i < matchPoints[n].x + m_xInterval; i++)
 	{
 		rect.x = i;
@@ -285,17 +285,19 @@ void CHausdorff::match()
 
 	delete []pMPoints;
 	delete []pSPoints;
+	delete []matchDis;
+	delete []matchPoints;
 }/* match() */
 
 
 /*
-* º¯ÊıÃû³Æ£ºdistance
-* º¯Êı¹¦ÄÜ£º»ñÈ¡Ä³Î»ÖÃµÄHausdorff distanceÖµ
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£ºÁ½×éÌØÕ÷µãÊı×éÖ¸Õë£¬ÌØÕ÷µã¸öÊı numA, numB
-* Êä³ö²ÎÊı£º
-* ·µ »Ø Öµ£º ¸ÃÎ»ÖÃµÄHausdorff distanceÖµ
-* ÆäËüËµÃ÷£º Ö§³ÖÍ¼Æ¬ROI
+* å‡½æ•°åç§°ï¼šdistance
+* å‡½æ•°åŠŸèƒ½ï¼šè·å–æŸä½ç½®çš„Hausdorff distanceå€¼
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼šä¸¤ç»„ç‰¹å¾ç‚¹æ•°ç»„æŒ‡é’ˆï¼Œç‰¹å¾ç‚¹ä¸ªæ•° numA, numB
+* è¾“å‡ºå‚æ•°ï¼š
+* è¿” å› å€¼ï¼š è¯¥ä½ç½®çš„Hausdorff distanceå€¼
+* å…¶å®ƒè¯´æ˜ï¼š æ”¯æŒå›¾ç‰‡ROI
 */
 double CHausdorff::distance(CvPoint Apoints[], CvPoint Bpoints[], int numA, int numB)
 {
@@ -309,13 +311,13 @@ double CHausdorff::distance(CvPoint Apoints[], CvPoint Bpoints[], int numA, int 
 }/*distance()*/
 
 /*
-* º¯ÊıÃû³Æ£ºcomputeDirDistance
-* º¯Êı¹¦ÄÜ£º¼ÆËãµ¥Ïò Hausdorff distance Öµ
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£ºÁ½×éÌØÕ÷µãÊı×éÖ¸Õë Apoints, Bpoints, ÌØÕ÷µã¸öÊınumA, int numB, µ¥Ïò¾àÀëÒò×Ó Range
-* Êä³ö²ÎÊı£º
-* ·µ »Ø Öµ£º µ¥Ïò Hausdorff distance Öµ
-* ÆäËüËµÃ÷£º
+* å‡½æ•°åç§°ï¼šcomputeDirDistance
+* å‡½æ•°åŠŸèƒ½ï¼šè®¡ç®—å•å‘ Hausdorff distance å€¼
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼šä¸¤ç»„ç‰¹å¾ç‚¹æ•°ç»„æŒ‡é’ˆ Apoints, Bpoints, ç‰¹å¾ç‚¹ä¸ªæ•°numA, int numB, å•å‘è·ç¦»å› å­ Range
+* è¾“å‡ºå‚æ•°ï¼š
+* è¿” å› å€¼ï¼š å•å‘ Hausdorff distance å€¼
+* å…¶å®ƒè¯´æ˜ï¼š
 */
 double CHausdorff::computeDirDistance(CvPoint Apoints[], CvPoint Bpoints[], int numA, int numB, double Range)
 {
@@ -329,22 +331,22 @@ double CHausdorff::computeDirDistance(CvPoint Apoints[], CvPoint Bpoints[], int 
 		{
 			temp = (Apoints[i].x - Bpoints[j].x) * (Apoints[i].x - Bpoints[j].x)
 					+ (Apoints[i].y - Bpoints[j].y) * (Apoints[i].y - Bpoints[j].y);
-			//»òÕßÊ¹ÓÃ²é±í·¨
+			//æˆ–è€…ä½¿ç”¨æŸ¥è¡¨æ³•
 			//temp = m_disTable[abs(Apoints[i].x - Bpoints[j].x)][abs(Apoints[i].y - Bpoints[j].y)];
 
 			// while b in B, get min|| a - b ||
 			aB = std::min(temp,aB);
 		}
 		disA[i] = aB;
-		// ×¢ÒâÏÂÃæÕâÌõÓï¾ä
+		// æ³¨æ„ä¸‹é¢è¿™æ¡è¯­å¥
 		aB = MAX_DISTANCE;
 	}
 
 	sort(disA, numA);
 	double dis;
-	// hausdorff ¾àÀë¸Ä½ø°æ£º²¿·Öhausdorff¾àÀë
+	// hausdorff è·ç¦»æ”¹è¿›ç‰ˆï¼šéƒ¨åˆ†hausdorffè·ç¦»
 	dis = disA[(int)(numA * Range) - 1];
-	// Ò²¿ÉÒÔ³¢ÊÔÆ½¾ù¾àÀë:meanDistance()£¬Ê¹ÓÃmeanDistance()Ôò²»ĞèÒª¶Ô¾àÀëÊı×éÅÅĞò
+	// ä¹Ÿå¯ä»¥å°è¯•å¹³å‡è·ç¦»:meanDistance()ï¼Œä½¿ç”¨meanDistance()åˆ™ä¸éœ€è¦å¯¹è·ç¦»æ•°ç»„æ’åº
 	// dis = meanDistance(disA, numA);
 
 	delete []disA;
@@ -352,13 +354,13 @@ double CHausdorff::computeDirDistance(CvPoint Apoints[], CvPoint Bpoints[], int 
 }/*computeDirDistance()*/
 
 /*
-* º¯ÊıÃû³Æ£ºdrawMatch()
-* º¯Êı¹¦ÄÜ£ºÔÚ´ıÆ¥ÅäÍ¼ÖĞ»­³öÆ¥Åä½á¹ûÇøÓò
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£º imgÖ¸ÕëÄ¬ÈÏÖ¸Ïòm_srcImg£¬¿ÉÒÔ½«´ıÆ¥ÅäÍ¼ÏñµÄjpeg¸ñÊ½Í¼ÏñÖ¸Õë´«Èë£¬ÒÔÊ¹½á¹û¸ü¼ÓÖ±¹Û
-* Êä³ö²ÎÊı£º
-* ·µ »Ø Öµ£º void
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šdrawMatch()
+* å‡½æ•°åŠŸèƒ½ï¼šåœ¨å¾…åŒ¹é…å›¾ä¸­ç”»å‡ºåŒ¹é…ç»“æœåŒºåŸŸ
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼š imgæŒ‡é’ˆé»˜è®¤æŒ‡å‘m_srcImgï¼Œå¯ä»¥å°†å¾…åŒ¹é…å›¾åƒçš„jpegæ ¼å¼å›¾åƒæŒ‡é’ˆä¼ å…¥ï¼Œä»¥ä½¿ç»“æœæ›´åŠ ç›´è§‚
+* è¾“å‡ºå‚æ•°ï¼š
+* è¿” å› å€¼ï¼š void
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
 void CHausdorff::drawMatch(IplImage *img)
 {
@@ -376,15 +378,15 @@ void CHausdorff::drawMatch(IplImage *img)
 }
 
 /*
-* º¯ÊıÃû³Æ£ºsort
-* º¯Êı¹¦ÄÜ£º¶ÔÊı×é½øĞĞÉıĞòÅÅĞò
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£º´ıÅÅĞòÊı×éÖ¸Õë¼°Êı×é¸öÊı
-* Êä³ö²ÎÊı£º
-* ·µ »Ø Öµ£º void
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šsort
+* å‡½æ•°åŠŸèƒ½ï¼šå¯¹æ•°ç»„è¿›è¡Œå‡åºæ’åº
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼šå¾…æ’åºæ•°ç»„æŒ‡é’ˆåŠæ•°ç»„ä¸ªæ•°
+* è¾“å‡ºå‚æ•°ï¼š
+* è¿” å› å€¼ï¼š void
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
-void CHausdorff::sort(double a[],int n) //ÉıĞò
+void CHausdorff::sort(double a[],int n) //å‡åº
 { 
 	double temp;
 	for(int i=0;i<n;i++) 
@@ -400,13 +402,13 @@ void CHausdorff::sort(double a[],int n) //ÉıĞò
 }
 
 /*
-* º¯ÊıÃû³Æ£ºmeanDistance
-* º¯Êı¹¦ÄÜ£º¶Ô¾àÀëÊı×éÇóÆ½¾ùÖµ
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£º¾àÀëÊı×éÖ¸Õë¼°Êı×é¸öÊı
-* Êä³ö²ÎÊı£º
-* ·µ »Ø Öµ£º ¾àÀëÊı×éµÄÆ½¾ùÖµ
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šmeanDistance
+* å‡½æ•°åŠŸèƒ½ï¼šå¯¹è·ç¦»æ•°ç»„æ±‚å¹³å‡å€¼
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼šè·ç¦»æ•°ç»„æŒ‡é’ˆåŠæ•°ç»„ä¸ªæ•°
+* è¾“å‡ºå‚æ•°ï¼š
+* è¿” å› å€¼ï¼š è·ç¦»æ•°ç»„çš„å¹³å‡å€¼
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
 double CHausdorff::meanDistance(double a[], int n)
 {
@@ -421,13 +423,13 @@ double CHausdorff::meanDistance(double a[], int n)
 }
 
 /*
-* º¯ÊıÃû³Æ£ºcreateTable
-* º¯Êı¹¦ÄÜ£º´´½¨¾àÀë±ä»»±í
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£ºNULL
-* Êä³ö²ÎÊı£º¾àÀë±ä»»±íµÄÖ¸Õë
-* ·µ »Ø Öµ£º void
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šcreateTable
+* å‡½æ•°åŠŸèƒ½ï¼šåˆ›å»ºè·ç¦»å˜æ¢è¡¨
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼šNULL
+* è¾“å‡ºå‚æ•°ï¼šè·ç¦»å˜æ¢è¡¨çš„æŒ‡é’ˆ
+* è¿” å› å€¼ï¼š void
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
 void CHausdorff::createTable()
 {
@@ -454,13 +456,13 @@ void CHausdorff::createTable()
 }
 
 /*
-* º¯ÊıÃû³Æ£ºfreeTable
-* º¯Êı¹¦ÄÜ£ºÊÍ·Å¾àÀë±ä»»±íÄÚ´æ
-* º¯ÊıÈë¿Ú£º 
-* ÊäÈë²ÎÊı£º
-* Êä³ö²ÎÊı£º
-* ·µ »Ø Öµ£º void
-* ÆäËüËµÃ÷£º 
+* å‡½æ•°åç§°ï¼šfreeTable
+* å‡½æ•°åŠŸèƒ½ï¼šé‡Šæ”¾è·ç¦»å˜æ¢è¡¨å†…å­˜
+* å‡½æ•°å…¥å£ï¼š 
+* è¾“å…¥å‚æ•°ï¼š
+* è¾“å‡ºå‚æ•°ï¼š
+* è¿” å› å€¼ï¼š void
+* å…¶å®ƒè¯´æ˜ï¼š 
 */
 void CHausdorff::freeTable()
 {
