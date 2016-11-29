@@ -2,10 +2,10 @@
 * Copyright (C) 2015 HolaMirai(HolaMirai@163.com)
 * All rights reserved.
 * 
-* ÎÄ¼şÃû£ºhaus.cpp
-* ÕªÒª£º°üº¬mainº¯ÊıµÄÖ÷ÎÄ¼ş£¬ÓÃÓÚ²âÊÔCHausdorffÀà, CFeaturesÀà
-* ÀúÊ·¼ÇÂ¼£ºV2.0,2015Äê9ÔÂ14ÈÕ,Ìí¼ÓCFeaturesÀà£¬²¢Ê¹ÓÃCFeaturesÀàÀ´»ñÈ¡ÌØÕ÷µã
-* ÀúÊ·¼ÇÂ¼£ºV1.0,2015Äê9ÔÂ7ÈÕ£¬HolaMirai,´´½¨¸ÃÎÄ¼ş
+* æ–‡ä»¶åï¼šhaus.cpp
+* æ‘˜è¦ï¼šåŒ…å«mainå‡½æ•°çš„ä¸»æ–‡ä»¶ï¼Œç”¨äºæµ‹è¯•CHausdorffç±», CFeaturesç±»
+* å†å²è®°å½•ï¼šV2.0,2015å¹´9æœˆ14æ—¥,æ·»åŠ CFeaturesç±»ï¼Œå¹¶ä½¿ç”¨CFeaturesç±»æ¥è·å–ç‰¹å¾ç‚¹
+* å†å²è®°å½•ï¼šV1.0,2015å¹´9æœˆ7æ—¥ï¼ŒHolaMirai,åˆ›å»ºè¯¥æ–‡ä»¶
 ******************************************/
 
 #include "opencv2/opencv.hpp"
@@ -62,7 +62,7 @@ using namespace cv;
 //		haus.match();
 //		DWORD end_t = GetTickCount();
 //
-//		cout<<"Æ¥ÅäºÄÊ±£º"<<end_t - start_t<<"ms"<<endl;
+//		cout<<"åŒ¹é…è€—æ—¶ï¼š"<<end_t - start_t<<"ms"<<endl;
 //
 //		haus.drawMatch(srcColor);
 //
@@ -92,11 +92,11 @@ using namespace cv;
 
 
 
-////µ¥ÕÅÍ¼Æ¬Æ¥Åä
+////å•å¼ å›¾ç‰‡åŒ¹é…
 void main()
 {
-	char srcName[] = "sg.jpg";
-	char modelName[] = "sgt.jpg";
+	char srcName[] = "ls.jpg";
+	char modelName[] = "lsm0.jpg";
 
 	IplImage *srcColor = cvLoadImage(srcName,1);
 	IplImage *modelColor = cvLoadImage(modelName,1);
@@ -124,7 +124,7 @@ void main()
 	haus.match();
 	DWORD end_t = GetTickCount();
 
-	cout<<"Æ¥ÅäºÄÊ±£º"<<end_t - start_t<<"ms"<<endl;
+	cout<<"åŒ¹é…è€—æ—¶ï¼š"<<end_t - start_t<<"ms"<<endl;
 
 	haus.drawMatch(srcColor);
 
@@ -189,7 +189,7 @@ void main()
 //	haus.match();
 //	DWORD end_t = GetTickCount();
 //
-//	cout<<"Æ¥ÅäºÄÊ±£º"<<end_t - start_t<<"ms"<<endl;
+//	cout<<"åŒ¹é…è€—æ—¶ï¼š"<<end_t - start_t<<"ms"<<endl;
 //
 //	haus.drawMatch(srcColor);
 //
