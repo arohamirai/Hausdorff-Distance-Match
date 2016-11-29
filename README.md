@@ -4,4 +4,4 @@ This project demostrates how to use Hausdorff distance to do templete matching. 
 Typically, we need input the source image file, the templete image file and the type of feature point. the we can get the result like this:
 <center>![iamge](https://github.com/HolaMirai/Hausdorff-Distance-Match/blob/master/haus/lsresult0.png)<center>
 
-
+when you find any bug, please let me know.
